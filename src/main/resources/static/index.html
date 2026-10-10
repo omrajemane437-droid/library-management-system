@@ -1,0 +1,553 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Library Management System</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f6fb;
+      color: #243047;
+    }
+
+    header {
+      background: #263b63;
+      color: white;
+      padding: 25px 7%;
+    }
+
+    header h1 {
+      margin: 0 0 8px;
+    }
+
+    header p {
+      margin: 0;
+      color: #d8e2f4;
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 30px auto;
+      padding: 0 20px;
+    }
+
+    .card {
+      background: white;
+      padding: 25px;
+      margin-bottom: 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06);
+    }
+
+    h2 {
+      margin-top: 0;
+      color: #263b63;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    label {
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #d5dbea;
+      border-radius: 7px;
+      font-size: 15px;
+    }
+
+    input:focus {
+      outline: 2px solid #b6c9ff;
+      border-color: #4268d5;
+    }
+
+    button {
+      padding: 11px 17px;
+      border: none;
+      border-radius: 7px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: wait;
+    }
+
+    .primary {
+      background: #365bd6;
+      color: white;
+      margin-top: 20px;
+    }
+
+    .primary:hover {
+      background: #2848b5;
+    }
+
+    .danger {
+      background: #ffe7e7;
+      color: #b42323;
+    }
+
+    .danger:hover {
+      background: #ffd1d1;
+    }
+
+    .toolbar {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .toolbar input {
+      flex: 1;
+    }
+
+    .secondary {
+      background: #e8edfa;
+      color: #263b63;
+      white-space: nowrap;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 550px;
+    }
+
+    th, td {
+      padding: 14px 12px;
+      border-bottom: 1px solid #edf0f6;
+      text-align: left;
+    }
+
+    th {
+      background: #f5f7fc;
+      color: #52617a;
+      font-size: 13px;
+    }
+
+    td {
+      font-size: 14px;
+    }
+
+    .status {
+      margin-top: 15px;
+      font-size: 14px;
+    }
+
+    .success {
+      color: #137547;
+    }
+
+    .error {
+      color: #bf2525;
+    }
+
+    .muted {
+      color: #748097;
+    }
+
+    @media (max-width: 600px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .toolbar {
+        flex-direction: column;
+      }
+
+      header {
+        padding: 22px;
+      }
+
+      .card {
+        padding: 18px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>📚 Library Management System</h1>
+  <p>Manage your books in one place</p>
+</header>
+
+<main>
+
+  <!-- ADD BOOK FORM -->
+  <section class="card">
+    <h2>➕ Add a New Book</h2>
+
+    <form id="bookForm">
+      <div class="form-grid">
+
+        <div class="field">
+          <label for="title">Book Title *</label>
+          <input id="title" name="title"
+                 placeholder="Enter book title"
+                 required maxlength="200">
+        </div>
+
+        <div class="field">
+          <label for="author">Author *</label>
+          <input id="author" name="author"
+                 placeholder="Enter author name"
+                 required maxlength="150">
+        </div>
+
+        <div class="field">
+          <label for="isbn">ISBN</label>
+          <input id="isbn" name="isbn"
+                 placeholder="Enter ISBN">
+        </div>
+
+        <div class="field">
+          <label for="publicationYear">Publication Year</label>
+          <input id="publicationYear" name="publicationYear"
+                 type="number" min="1" max="2100"
+                 placeholder="e.g. 2024">
+        </div>
+
+      </div>
+
+      <button type="submit" class="primary" id="addButton">
+        Add Book
+      </button>
+
+      <p id="formStatus" class="status" role="status"
+         aria-live="polite"></p>
+    </form>
+  </section>
+
+  <!-- BOOK LIST -->
+  <section class="card">
+    <h2>📖 All Books</h2>
+
+    <div class="toolbar">
+      <input type="search" id="searchInput"
+             placeholder="Search by book title or author..."
+             aria-label="Search books by title or author">
+
+      <button type="button" class="secondary"
+              id="refreshButton">
+        ↻ Refresh
+      </button>
+    </div>
+
+    <p id="listStatus" class="status muted"
+       role="status" aria-live="polite">
+      Loading books...
+    </p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+        <tr>
+          <th>ID</th>
+          <th>Book Title</th>
+          <th>Author</th>
+          <th>ISBN</th>
+          <th>Year</th>
+          <th>Action</th>
+        </tr>
+        </thead>
+
+        <tbody id="bookTableBody">
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+</main>
+
+<script>
+  // Change this if your controller uses a different URL.
+  const API_URL = "/api/books";
+
+  const bookForm = document.getElementById("bookForm");
+  const addButton = document.getElementById("addButton");
+  const searchInput = document.getElementById("searchInput");
+  const refreshButton = document.getElementById("refreshButton");
+  const bookTableBody = document.getElementById("bookTableBody");
+  const formStatus = document.getElementById("formStatus");
+  const listStatus = document.getElementById("listStatus");
+
+  let books = [];
+
+  function showMessage(element, message, type = "") {
+    element.textContent = message;
+    element.className = "status " + type;
+  }
+
+  // Make a request to the Spring Boot API.
+  async function apiRequest(url, options = {}) {
+    const response = await fetch(url, options);
+
+    if (!response.ok) {
+      const details = await response.text();
+      throw new Error(
+              details || `Request failed (${response.status})`
+      );
+    }
+
+    if (response.status === 204) {
+      return null;
+    }
+
+    const contentType = response.headers.get("content-type") || "";
+
+    if (contentType.includes("application/json")) {
+      return response.json();
+    }
+
+    return null;
+  }
+
+  // GET: Load all books.
+  async function loadBooks() {
+    refreshButton.disabled = true;
+    showMessage(listStatus, "Loading books...");
+
+    try {
+      const data = await apiRequest(API_URL);
+
+      // Supports either a JSON array or Spring Page response.
+      books = Array.isArray(data)
+              ? data
+              : (data && Array.isArray(data.content)
+                      ? data.content
+                      : []);
+
+      renderBooks();
+    } catch (error) {
+      books = [];
+      renderBooks();
+
+      showMessage(
+              listStatus,
+              "Could not load books. Check your API URL and backend. " +
+              error.message,
+              "error"
+      );
+    } finally {
+      refreshButton.disabled = false;
+    }
+  }
+
+  // Safely display books without inserting HTML from API data.
+  function renderBooks() {
+    const query = searchInput.value.trim().toLowerCase();
+
+    const filteredBooks = books.filter(book => {
+      const title = String(book.title ?? "").toLowerCase();
+      const author = String(book.author ?? "").toLowerCase();
+
+      return title.includes(query) || author.includes(query);
+    });
+
+    bookTableBody.replaceChildren();
+
+    if (filteredBooks.length === 0) {
+      const row = document.createElement("tr");
+      const cell = document.createElement("td");
+
+      cell.colSpan = 6;
+      cell.textContent = query
+              ? "No books match your search."
+              : "No books found. Add your first book above.";
+
+      row.appendChild(cell);
+      bookTableBody.appendChild(row);
+
+      if (listStatus.classList.contains("error")) {
+        return;
+      }
+
+      showMessage(
+              listStatus,
+              query ? "No matching books." : "0 books found.",
+              "muted"
+      );
+
+      return;
+    }
+
+    filteredBooks.forEach(book => {
+      const row = document.createElement("tr");
+
+      // If your entity uses a different ID property,
+      // update this expression.
+      const id = book.id ?? book.bookId;
+
+      const values = [
+        id ?? "—",
+        book.title ?? "—",
+        book.author ?? "—",
+        book.isbn ?? "—",
+        book.publicationYear ?? book.year ?? "—"
+      ];
+
+      values.forEach(value => {
+        const cell = document.createElement("td");
+        cell.textContent = String(value);
+        row.appendChild(cell);
+      });
+
+      const actionCell = document.createElement("td");
+      const deleteButton = document.createElement("button");
+
+      deleteButton.type = "button";
+      deleteButton.textContent = "Delete";
+      deleteButton.className = "danger";
+      deleteButton.disabled = id == null;
+
+      deleteButton.addEventListener("click", () => {
+        deleteBook(id, book.title);
+      });
+
+      actionCell.appendChild(deleteButton);
+      row.appendChild(actionCell);
+      bookTableBody.appendChild(row);
+    });
+
+    showMessage(
+            listStatus,
+            `Showing ${filteredBooks.length} of ${books.length} book(s).`,
+            "muted"
+    );
+  }
+
+  // POST: Add a book.
+  bookForm.addEventListener("submit", async event => {
+    event.preventDefault();
+
+    const title = document.getElementById("title").value.trim();
+    const author = document.getElementById("author").value.trim();
+    const isbn = document.getElementById("isbn").value.trim();
+    const yearValue =
+            document.getElementById("publicationYear").value;
+
+    if (!title || !author) {
+      showMessage(
+              formStatus,
+              "Please enter both the book title and author.",
+              "error"
+      );
+      return;
+    }
+
+    const newBook = {
+      title: title,
+      author: author,
+      isbn: isbn || null,
+      publicationYear: yearValue
+              ? Number(yearValue)
+              : null
+    };
+
+    addButton.disabled = true;
+    addButton.textContent = "Adding...";
+
+    showMessage(formStatus, "Adding book...");
+
+    try {
+      await apiRequest(API_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(newBook)
+      });
+
+      bookForm.reset();
+
+      showMessage(
+              formStatus,
+              "Book added successfully!",
+              "success"
+      );
+
+      await loadBooks();
+    } catch (error) {
+      showMessage(
+              formStatus,
+              "Could not add book: " + error.message,
+              "error"
+      );
+    } finally {
+      addButton.disabled = false;
+      addButton.textContent = "Add Book";
+    }
+  });
+
+  // DELETE: Remove a book.
+  async function deleteBook(id, title) {
+    if (!confirm(`Are you sure you want to delete "${title}"?`)) {
+      return;
+    }
+
+    showMessage(listStatus, "Deleting book...");
+
+    try {
+      await apiRequest(
+              `${API_URL}/${encodeURIComponent(id)}`,
+              { method: "DELETE" }
+      );
+
+      showMessage(
+              listStatus,
+              "Book deleted successfully.",
+              "success"
+      );
+
+      await loadBooks();
+    } catch (error) {
+      showMessage(
+              listStatus,
+              "Could not delete book: " + error.message,
+              "error"
+      );
+    }
+  }
+
+  // Search instantly without sending a request for every keystroke.
+  searchInput.addEventListener("input", renderBooks);
+
+  // Refresh the list from the API.
+  refreshButton.addEventListener("click", loadBooks);
+
+  // Load books when the page opens.
+  loadBooks();
+</script>
+
+</body>
+</html>
