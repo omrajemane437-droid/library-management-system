@@ -1,553 +1,130 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Library Management System</title>
-
-  <style>
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f4f6fb;
-      color: #243047;
-    }
-
-    header {
-      background: #263b63;
-      color: white;
-      padding: 25px 7%;
-    }
-
-    header h1 {
-      margin: 0 0 8px;
-    }
-
-    header p {
-      margin: 0;
-      color: #d8e2f4;
-    }
-
-    main {
-      max-width: 1100px;
-      margin: 30px auto;
-      padding: 0 20px;
-    }
-
-    .card {
-      background: white;
-      padding: 25px;
-      margin-bottom: 25px;
-      border-radius: 12px;
-      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06);
-    }
-
-    h2 {
-      margin-top: 0;
-      color: #263b63;
-    }
-
-    .form-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 18px;
-    }
-
-    .field {
-      display: flex;
-      flex-direction: column;
-      gap: 7px;
-    }
-
-    label {
-      font-weight: bold;
-      font-size: 14px;
-    }
-
-    input {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid #d5dbea;
-      border-radius: 7px;
-      font-size: 15px;
-    }
-
-    input:focus {
-      outline: 2px solid #b6c9ff;
-      border-color: #4268d5;
-    }
-
-    button {
-      padding: 11px 17px;
-      border: none;
-      border-radius: 7px;
-      cursor: pointer;
-      font-size: 14px;
-      font-weight: bold;
-    }
-
-    button:disabled {
-      opacity: 0.6;
-      cursor: wait;
-    }
-
-    .primary {
-      background: #365bd6;
-      color: white;
-      margin-top: 20px;
-    }
-
-    .primary:hover {
-      background: #2848b5;
-    }
-
-    .danger {
-      background: #ffe7e7;
-      color: #b42323;
-    }
-
-    .danger:hover {
-      background: #ffd1d1;
-    }
-
-    .toolbar {
-      display: flex;
-      gap: 12px;
-      margin-bottom: 18px;
-    }
-
-    .toolbar input {
-      flex: 1;
-    }
-
-    .secondary {
-      background: #e8edfa;
-      color: #263b63;
-      white-space: nowrap;
-    }
-
-    .table-wrap {
-      overflow-x: auto;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      min-width: 550px;
-    }
-
-    th, td {
-      padding: 14px 12px;
-      border-bottom: 1px solid #edf0f6;
-      text-align: left;
-    }
-
-    th {
-      background: #f5f7fc;
-      color: #52617a;
-      font-size: 13px;
-    }
-
-    td {
-      font-size: 14px;
-    }
-
-    .status {
-      margin-top: 15px;
-      font-size: 14px;
-    }
-
-    .success {
-      color: #137547;
-    }
-
-    .error {
-      color: #bf2525;
-    }
-
-    .muted {
-      color: #748097;
-    }
-
-    @media (max-width: 600px) {
-      .form-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .toolbar {
-        flex-direction: column;
-      }
-
-      header {
-        padding: 22px;
-      }
-
-      .card {
-        padding: 18px;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Library Management System</title>
+<meta name="theme-color" content="#04070d">
+<link rel="stylesheet" href="css/living-book.css">
 </head>
-
 <body>
+<a class="skip" id="skip" href="#left">Skip to the library</a>
 
-<header>
-  <h1>📚 Library Management System</h1>
-  <p>Manage your books in one place</p>
-</header>
+<div id="track">
+<div id="stage">
+  <div id="dust" aria-hidden="true"></div>
+  <div id="shadow" aria-hidden="true"></div>
 
-<main>
+  <div id="scene"><div id="cam"><div id="book">
+    <div class="face spine" aria-hidden="true"><span>Library Management System</span></div>
+    <div class="face back" aria-hidden="true"></div>
+    <div class="face edge r" aria-hidden="true"></div>
+    <div class="face edge t" aria-hidden="true"></div>
+    <div class="face edge b" aria-hidden="true"></div>
 
-  <!-- ADD BOOK FORM -->
-  <section class="card">
-    <h2>➕ Add a New Book</h2>
+    <!-- RIGHT PAGE: main content -->
+    <section class="page right" id="right" aria-label="Library content">
+      <section class="ch" id="ch0">
+        <p class="eyebrow">Chapter I</p>
+        <h2>Library Overview</h2>
+        <p class="lead" id="ovLead">Loading the collection…</p>
+        <div class="meter" id="meter" role="img" aria-label="Availability"><span id="meterFill"></span></div>
+        <h3>Recently added</h3>
+        <div id="recent"></div>
+      </section>
 
-    <form id="bookForm">
-      <div class="form-grid">
-
-        <div class="field">
-          <label for="title">Book Title *</label>
-          <input id="title" name="title"
-                 placeholder="Enter book title"
-                 required maxlength="200">
+      <section class="ch" id="ch1" hidden>
+        <p class="eyebrow">Chapter II</p>
+        <h2>Book Catalogue</h2>
+        <div class="bar">
+          <input id="q" type="search" placeholder="Search title or author" aria-label="Search books by title or author" autocomplete="off">
+          <select id="filter" aria-label="Filter by availability">
+            <option value="all">All books</option>
+            <option value="in">Available</option>
+            <option value="out">Unavailable</option>
+          </select>
         </div>
-
-        <div class="field">
-          <label for="author">Author *</label>
-          <input id="author" name="author"
-                 placeholder="Enter author name"
-                 required maxlength="150">
+        <div class="bar">
+          <button class="primary" id="addOpen" type="button">Add book</button>
+          <button class="ghost" id="refresh" type="button">Refresh</button>
+          <span class="count" id="count" role="status" aria-live="polite"></span>
         </div>
+        <div class="scroll" id="shelf"></div>
+      </section>
 
-        <div class="field">
-          <label for="isbn">ISBN</label>
-          <input id="isbn" name="isbn"
-                 placeholder="Enter ISBN">
+      <section class="ch" id="ch2" hidden>
+        <p class="eyebrow">Chapter III</p>
+        <h2>Library Operations</h2>
+        <p class="lead">The current backend exposes only <code>/api/books</code>. These areas need endpoints that do not exist yet, so nothing here is interactive.</p>
+        <ul class="ops">
+          <li><strong>Members</strong><span>Not supported by the API</span></li>
+          <li><strong>Issue &amp; return</strong><span>Not supported by the API</span></li>
+          <li><strong>Borrowing records</strong><span>Not supported by the API</span></li>
+        </ul>
+      </section>
+    </section>
+
+    <!-- COVER: front face outside, left page inside -->
+    <div class="cover" id="cover">
+      <div class="front">
+        <div>
+          <div class="sigil" aria-hidden="true"></div>
+          <h1><span>Library</span><span>Management</span><span>System</span></h1>
+          <div class="rule" aria-hidden="true"></div>
         </div>
-
-        <div class="field">
-          <label for="publicationYear">Publication Year</label>
-          <input id="publicationYear" name="publicationYear"
-                 type="number" min="1" max="2100"
-                 placeholder="e.g. 2024">
-        </div>
-
       </div>
-
-      <button type="submit" class="primary" id="addButton">
-        Add Book
-      </button>
-
-      <p id="formStatus" class="status" role="status"
-         aria-live="polite"></p>
-    </form>
-  </section>
-
-  <!-- BOOK LIST -->
-  <section class="card">
-    <h2>📖 All Books</h2>
-
-    <div class="toolbar">
-      <input type="search" id="searchInput"
-             placeholder="Search by book title or author..."
-             aria-label="Search books by title or author">
-
-      <button type="button" class="secondary"
-              id="refreshButton">
-        ↻ Refresh
-      </button>
+      <aside class="page left" id="left" aria-label="Contents and summary">
+        <p class="eyebrow">Index</p>
+        <h2>Contents</h2>
+        <nav id="nav" aria-label="Sections">
+          <button type="button" data-ch="0" aria-current="page"><i>I</i><span>Overview</span></button>
+          <button type="button" data-ch="1" aria-current="false"><i>II</i><span>Catalogue</span></button>
+          <button type="button" data-ch="2" aria-current="false"><i>III</i><span>Operations</span></button>
+        </nav>
+        <dl class="sum">
+          <div><dt>Total</dt><dd id="sTotal">–</dd></div>
+          <div><dt>Available</dt><dd id="sAvail">–</dd></div>
+          <div><dt>Unavailable</dt><dd id="sOut">–</dd></div>
+        </dl>
+        <p class="api" id="apiState" role="status">Connecting…</p>
+      </aside>
     </div>
+  </div></div></div>
 
-    <p id="listStatus" class="status muted"
-       role="status" aria-live="polite">
-      Loading books...
-    </p>
+  <button id="hint" type="button">Scroll to open</button>
+</div>
+</div>
 
-    <div class="table-wrap">
-      <table>
-        <thead>
-        <tr>
-          <th>ID</th>
-          <th>Book Title</th>
-          <th>Author</th>
-          <th>ISBN</th>
-          <th>Year</th>
-          <th>Action</th>
-        </tr>
-        </thead>
-
-        <tbody id="bookTableBody">
-        </tbody>
-      </table>
+<dialog id="addDlg" aria-labelledby="addT">
+  <form id="bookForm" novalidate>
+    <h2 id="addT">Add a book</h2>
+    <label for="title">Book title *</label>
+    <input id="title" name="title" required maxlength="200" placeholder="Enter book title">
+    <label for="author">Author *</label>
+    <input id="author" name="author" required maxlength="150" placeholder="Enter author name">
+    <label class="chk"><input type="checkbox" id="avail" checked> Available for lending</label>
+    <p class="formErr" id="formStatus" role="alert"></p>
+    <div class="acts">
+      <button type="button" class="ghost" id="addCancel">Cancel</button>
+      <button type="submit" class="primary" id="addBtn">Add book</button>
     </div>
-  </section>
+  </form>
+</dialog>
 
-</main>
+<dialog id="delDlg" aria-labelledby="delT">
+  <form method="dialog">
+    <h2 id="delT">Remove this book?</h2>
+    <p id="delMsg" class="lead"></p>
+    <div class="acts">
+      <button value="cancel" class="ghost">Cancel</button>
+      <button value="ok" class="ghost danger">Delete</button>
+    </div>
+  </form>
+</dialog>
 
-<script>
-  // Change this if your controller uses a different URL.
-  const API_URL = "/api/books";
+<div id="toasts" aria-live="polite"></div>
 
-  const bookForm = document.getElementById("bookForm");
-  const addButton = document.getElementById("addButton");
-  const searchInput = document.getElementById("searchInput");
-  const refreshButton = document.getElementById("refreshButton");
-  const bookTableBody = document.getElementById("bookTableBody");
-  const formStatus = document.getElementById("formStatus");
-  const listStatus = document.getElementById("listStatus");
-
-  let books = [];
-
-  function showMessage(element, message, type = "") {
-    element.textContent = message;
-    element.className = "status " + type;
-  }
-
-  // Make a request to the Spring Boot API.
-  async function apiRequest(url, options = {}) {
-    const response = await fetch(url, options);
-
-    if (!response.ok) {
-      const details = await response.text();
-      throw new Error(
-              details || `Request failed (${response.status})`
-      );
-    }
-
-    if (response.status === 204) {
-      return null;
-    }
-
-    const contentType = response.headers.get("content-type") || "";
-
-    if (contentType.includes("application/json")) {
-      return response.json();
-    }
-
-    return null;
-  }
-
-  // GET: Load all books.
-  async function loadBooks() {
-    refreshButton.disabled = true;
-    showMessage(listStatus, "Loading books...");
-
-    try {
-      const data = await apiRequest(API_URL);
-
-      // Supports either a JSON array or Spring Page response.
-      books = Array.isArray(data)
-              ? data
-              : (data && Array.isArray(data.content)
-                      ? data.content
-                      : []);
-
-      renderBooks();
-    } catch (error) {
-      books = [];
-      renderBooks();
-
-      showMessage(
-              listStatus,
-              "Could not load books. Check your API URL and backend. " +
-              error.message,
-              "error"
-      );
-    } finally {
-      refreshButton.disabled = false;
-    }
-  }
-
-  // Safely display books without inserting HTML from API data.
-  function renderBooks() {
-    const query = searchInput.value.trim().toLowerCase();
-
-    const filteredBooks = books.filter(book => {
-      const title = String(book.title ?? "").toLowerCase();
-      const author = String(book.author ?? "").toLowerCase();
-
-      return title.includes(query) || author.includes(query);
-    });
-
-    bookTableBody.replaceChildren();
-
-    if (filteredBooks.length === 0) {
-      const row = document.createElement("tr");
-      const cell = document.createElement("td");
-
-      cell.colSpan = 6;
-      cell.textContent = query
-              ? "No books match your search."
-              : "No books found. Add your first book above.";
-
-      row.appendChild(cell);
-      bookTableBody.appendChild(row);
-
-      if (listStatus.classList.contains("error")) {
-        return;
-      }
-
-      showMessage(
-              listStatus,
-              query ? "No matching books." : "0 books found.",
-              "muted"
-      );
-
-      return;
-    }
-
-    filteredBooks.forEach(book => {
-      const row = document.createElement("tr");
-
-      // If your entity uses a different ID property,
-      // update this expression.
-      const id = book.id ?? book.bookId;
-
-      const values = [
-        id ?? "—",
-        book.title ?? "—",
-        book.author ?? "—",
-        book.isbn ?? "—",
-        book.publicationYear ?? book.year ?? "—"
-      ];
-
-      values.forEach(value => {
-        const cell = document.createElement("td");
-        cell.textContent = String(value);
-        row.appendChild(cell);
-      });
-
-      const actionCell = document.createElement("td");
-      const deleteButton = document.createElement("button");
-
-      deleteButton.type = "button";
-      deleteButton.textContent = "Delete";
-      deleteButton.className = "danger";
-      deleteButton.disabled = id == null;
-
-      deleteButton.addEventListener("click", () => {
-        deleteBook(id, book.title);
-      });
-
-      actionCell.appendChild(deleteButton);
-      row.appendChild(actionCell);
-      bookTableBody.appendChild(row);
-    });
-
-    showMessage(
-            listStatus,
-            `Showing ${filteredBooks.length} of ${books.length} book(s).`,
-            "muted"
-    );
-  }
-
-  // POST: Add a book.
-  bookForm.addEventListener("submit", async event => {
-    event.preventDefault();
-
-    const title = document.getElementById("title").value.trim();
-    const author = document.getElementById("author").value.trim();
-    const isbn = document.getElementById("isbn").value.trim();
-    const yearValue =
-            document.getElementById("publicationYear").value;
-
-    if (!title || !author) {
-      showMessage(
-              formStatus,
-              "Please enter both the book title and author.",
-              "error"
-      );
-      return;
-    }
-
-    const newBook = {
-      title: title,
-      author: author,
-      isbn: isbn || null,
-      publicationYear: yearValue
-              ? Number(yearValue)
-              : null
-    };
-
-    addButton.disabled = true;
-    addButton.textContent = "Adding...";
-
-    showMessage(formStatus, "Adding book...");
-
-    try {
-      await apiRequest(API_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(newBook)
-      });
-
-      bookForm.reset();
-
-      showMessage(
-              formStatus,
-              "Book added successfully!",
-              "success"
-      );
-
-      await loadBooks();
-    } catch (error) {
-      showMessage(
-              formStatus,
-              "Could not add book: " + error.message,
-              "error"
-      );
-    } finally {
-      addButton.disabled = false;
-      addButton.textContent = "Add Book";
-    }
-  });
-
-  // DELETE: Remove a book.
-  async function deleteBook(id, title) {
-    if (!confirm(`Are you sure you want to delete "${title}"?`)) {
-      return;
-    }
-
-    showMessage(listStatus, "Deleting book...");
-
-    try {
-      await apiRequest(
-              `${API_URL}/${encodeURIComponent(id)}`,
-              { method: "DELETE" }
-      );
-
-      showMessage(
-              listStatus,
-              "Book deleted successfully.",
-              "success"
-      );
-
-      await loadBooks();
-    } catch (error) {
-      showMessage(
-              listStatus,
-              "Could not delete book: " + error.message,
-              "error"
-      );
-    }
-  }
-
-  // Search instantly without sending a request for every keystroke.
-  searchInput.addEventListener("input", renderBooks);
-
-  // Refresh the list from the API.
-  refreshButton.addEventListener("click", loadBooks);
-
-  // Load books when the page opens.
-  loadBooks();
-</script>
-
+<script src="js/living-book.js"></script>
+<script src="js/app.js"></script>
 </body>
 </html>

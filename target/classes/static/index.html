@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Library Management System</title>
+<meta name="theme-color" content="#04070d">
+<link rel="stylesheet" href="css/living-book.css">
+</head>
+<body>
+<a class="skip" id="skip" href="#left">Skip to the library</a>
+
+<div id="track">
+<div id="stage">
+  <div id="dust" aria-hidden="true"></div>
+  <div id="shadow" aria-hidden="true"></div>
+
+  <div id="scene"><div id="cam"><div id="book">
+    <div class="face spine" aria-hidden="true"><span>Library Management System</span></div>
+    <div class="face back" aria-hidden="true"></div>
+    <div class="face edge r" aria-hidden="true"></div>
+    <div class="face edge t" aria-hidden="true"></div>
+    <div class="face edge b" aria-hidden="true"></div>
+
+    <!-- RIGHT PAGE: main content -->
+    <section class="page right" id="right" aria-label="Library content">
+      <section class="ch" id="ch0">
+        <p class="eyebrow">Chapter I</p>
+        <h2>Library Overview</h2>
+        <p class="lead" id="ovLead">Loading the collection…</p>
+        <div class="meter" id="meter" role="img" aria-label="Availability"><span id="meterFill"></span></div>
+        <h3>Recently added</h3>
+        <div id="recent"></div>
+      </section>
+
+      <section class="ch" id="ch1" hidden>
+        <p class="eyebrow">Chapter II</p>
+        <h2>Book Catalogue</h2>
+        <div class="bar">
+          <input id="q" type="search" placeholder="Search title or author" aria-label="Search books by title or author" autocomplete="off">
+          <select id="filter" aria-label="Filter by availability">
+            <option value="all">All books</option>
+            <option value="in">Available</option>
+            <option value="out">Unavailable</option>
+          </select>
+        </div>
+        <div class="bar">
+          <button class="primary" id="addOpen" type="button">Add book</button>
+          <button class="ghost" id="refresh" type="button">Refresh</button>
+          <span class="count" id="count" role="status" aria-live="polite"></span>
+        </div>
+        <div class="scroll" id="shelf"></div>
+      </section>
+
+      <section class="ch" id="ch2" hidden>
+        <p class="eyebrow">Chapter III</p>
+        <h2>Library Operations</h2>
+        <p class="lead">The current backend exposes only <code>/api/books</code>. These areas need endpoints that do not exist yet, so nothing here is interactive.</p>
+        <ul class="ops">
+          <li><strong>Members</strong><span>Not supported by the API</span></li>
+          <li><strong>Issue &amp; return</strong><span>Not supported by the API</span></li>
+          <li><strong>Borrowing records</strong><span>Not supported by the API</span></li>
+        </ul>
+      </section>
+    </section>
+
+    <!-- COVER: front face outside, left page inside -->
+    <div class="cover" id="cover">
+      <div class="front">
+        <div>
+          <div class="sigil" aria-hidden="true"></div>
+          <h1><span>Library</span><span>Management</span><span>System</span></h1>
+          <div class="rule" aria-hidden="true"></div>
+        </div>
+      </div>
+      <aside class="page left" id="left" aria-label="Contents and summary">
+        <p class="eyebrow">Index</p>
+        <h2>Contents</h2>
+        <nav id="nav" aria-label="Sections">
+          <button type="button" data-ch="0" aria-current="page"><i>I</i><span>Overview</span></button>
+          <button type="button" data-ch="1" aria-current="false"><i>II</i><span>Catalogue</span></button>
+          <button type="button" data-ch="2" aria-current="false"><i>III</i><span>Operations</span></button>
+        </nav>
+        <dl class="sum">
+          <div><dt>Total</dt><dd id="sTotal">–</dd></div>
+          <div><dt>Available</dt><dd id="sAvail">–</dd></div>
+          <div><dt>Unavailable</dt><dd id="sOut">–</dd></div>
+        </dl>
+        <p class="api" id="apiState" role="status">Connecting…</p>
+      </aside>
+    </div>
+  </div></div></div>
+
+  <button id="hint" type="button">Scroll to open</button>
+</div>
+</div>
+
+<dialog id="addDlg" aria-labelledby="addT">
+  <form id="bookForm" novalidate>
+    <h2 id="addT">Add a book</h2>
+    <label for="title">Book title *</label>
+    <input id="title" name="title" required maxlength="200" placeholder="Enter book title">
+    <label for="author">Author *</label>
+    <input id="author" name="author" required maxlength="150" placeholder="Enter author name">
+    <label class="chk"><input type="checkbox" id="avail" checked> Available for lending</label>
+    <p class="formErr" id="formStatus" role="alert"></p>
+    <div class="acts">
+      <button type="button" class="ghost" id="addCancel">Cancel</button>
+      <button type="submit" class="primary" id="addBtn">Add book</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="delDlg" aria-labelledby="delT">
+  <form method="dialog">
+    <h2 id="delT">Remove this book?</h2>
+    <p id="delMsg" class="lead"></p>
+    <div class="acts">
+      <button value="cancel" class="ghost">Cancel</button>
+      <button value="ok" class="ghost danger">Delete</button>
+    </div>
+  </form>
+</dialog>
+
+<div id="toasts" aria-live="polite"></div>
+
+<script src="js/living-book.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
