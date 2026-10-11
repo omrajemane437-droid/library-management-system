@@ -1,0 +1,21 @@
+
+### Add a book
+POST http://localhost:8080/books
+Content-Type: application/json
+
+{
+  "title": "Java Programming",
+  "author": "James Gosling"
+}
+
+### Get all books
+GET http://localhost:8080/books
+### Add a book
+POST http://localhost:8080/books
+Content-Type: application/json
+
+{
+  "title": "Java Programming",
+  "author": "James Gosling"
+}
+
